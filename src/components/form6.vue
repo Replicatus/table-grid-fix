@@ -14,57 +14,62 @@
     <template #header-npg>
       <div style="min-width: 80px">1</div><div>2</div>
     </template>
-    <template #npg="{row}">
-      <template v-if="row.uslName">
-        <div class="font-weight-bold font-size-medium ">
-          {{row.uslName[0].toUpperCase()+ row.uslName.slice(1) }}
-        </div>
-      </template>
-      <template v-else>
-        <div style="">
-          {{row.sprSpec ? row.sprSpec.kodSpec  : row.sprKcpGroup.code }}
-        </div>
-        <div class="ml-3">
-          {{row.sprSpec ?  row.sprSpec.name : row.sprKcpGroup.name}}
-        </div>
-      </template>
-    </template>
-    <template #qkcpo18Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpv18Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpz18Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpo19Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpv19Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpz19Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpo20Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpv20Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpz20Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpo21Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpv21Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
-    <template #qkcpz21Mon="{row,cell}">
-      <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>
-    </template>
+
+<!--    <template #row="{row}">-->
+<!--      <div>{{row}}</div>-->
+<!--      <template #npg="{row}">-->
+<!--        <template v-if="row.uslName">-->
+<!--          <div class="font-weight-bold font-size-medium ">-->
+<!--            {{row.uslName[0].toUpperCase()+ row.uslName.slice(1) }}-->
+<!--          </div>-->
+<!--        </template>-->
+<!--        <template v-else>-->
+<!--          <div style="">-->
+<!--            {{row.sprSpec ? row.sprSpec.kodSpec  : row.sprKcpGroup.code }}-->
+<!--          </div>-->
+<!--          <div class="ml-3">-->
+<!--            {{row.sprSpec ?  row.sprSpec.name : row.sprKcpGroup.name}}-->
+<!--          </div>-->
+<!--        </template>-->
+<!--      </template>-->
+<!--      <template #qkcpo18Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpv18Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpz18Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpo19Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpv19Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpz19Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpo20Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpv20Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpz20Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpo21Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpv21Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--      <template #qkcpz21Mon="{row,cell}">-->
+<!--        <edit-table-cell v-bind="cell.props(row,cell, loadingMenu)" @component-action="saveValue($event)"></edit-table-cell>-->
+<!--      </template>-->
+<!--    </template>-->
+
   </GridTable>
 </div>
 </template>

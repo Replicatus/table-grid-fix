@@ -3,8 +3,8 @@
       class="table-grid-body-row"
       :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"
       @click="rowAction($event,row)"
-
   >
+<!--    <slot name="row" :row="row" :headers="headersForRows" :id="row.id != null ? row.id : index">-->
     <div
         v-for="cell in headersForRows"
         class="table-grid-body-row__cell"
@@ -12,13 +12,19 @@
         :class="[cell.class, painCell(row, cell)]"
         :style="calcStylesForRowCell(row,cell)"
     >
-      <!--            grid-template-columns: minmax(200px, ${(numCols )}fr); -->
-      <slot :name="cell.dataField" :row="row" :id="row.id != null ? row.id : index" :cell="cell">
+<!--                  grid-template-columns: minmax(200px, ${(numCols )}fr); -->
+      <slot :name="cell.dataField" :row="row" :id="row.id != null ? row.id + index : index" :cell="cell">
         <template>
           <span v-html="cellData(row, cell)"></span>
         </template>
       </slot>
+<!--      <template v-for="(_, slot) in slots">-->
+<!--        <template :slot="slot">-->
+<!--          <slot :name="cell.dataField"  :row="row" :id="row.id != null ? row.id : index" :cell="cell"></slot>-->
+<!--        </template>-->
+<!--      </template>-->
     </div>
+<!--    </slot>-->
   </div>
 </template>
 

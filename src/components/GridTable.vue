@@ -7,20 +7,21 @@
 <!--        :style="`grid-template-columns : repeat(${numCols}, 1fr); max-height: ${maxTableHeight};`"-->
 <!--    >-->
       <!--       header -->
-      <div
-          class="table-grid-header-row"
-          :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr )`"
-          ref="table-grid-header-row"
-      >
+<!--      <div-->
+<!--          class="table-grid-header-row"-->
+<!--          :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr )`"-->
+<!--          ref="table-grid-header-row"-->
+<!--      >-->
 <!--        <template v-if="!loading">-->
           <slot name="defaultHeader" :headers="localHeaders">
 
             <div
-                v-for="(item, i) in localHeaders" :key="i"
+                v-for="(item, i) in localHeaders"
+                :key="item.dataField + i"
                 class="table-grid-header__cell"
                 :class="item.headerClass"
                 :ref="'table-grid-header__cell-'+item.dataField"
-                :style="`grid-column: span ${item.cols }; grid-row: span ${item.rows};
+                :style="`grid-column: span ${item.cols };top: ${topFixedPositionForHeaderCell(item).offsetTop}px;  grid-row: span ${item.rows};
               ${item.headerStyles}`"
             >
 <!--  top: ${topFixedPositionForHeaderCell(item).offsetTop}px;              -->
@@ -73,11 +74,33 @@
         <slot name="customHeader" :headers="headers">
 
         </slot>
-      </div>
+<!--      </div>-->
       <!--        body-->
       <loading-dtable v-if="loadingData || loading" :num-cols="numCols" :loader-color="loaderColor"></loading-dtable>
       <empty-row-dtable :num-cols="numCols" v-else-if="dataRows.length === 0" ></empty-row-dtable>
       <template v-else>
+<!--        <div class="table-grid-body-row"-->
+<!--             v-for="(row, j) in dataRows"-->
+<!--             :key="(row.id != null ? row.id : j)"-->
+<!--             :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"-->
+<!--             @click="rowAction($event,row)"-->
+<!--             :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"-->
+<!--        >-->
+<!--          <div-->
+<!--              class="table-grid-body-row__cell"-->
+<!--              v-for="(cell) in headersForRows"-->
+<!--              :key="cell.dataField"-->
+<!--              :class="[cell.class, painCell(row, cell)]"-->
+<!--              :style="`${typeof cell.styles === 'function' ? cell.styles(row) : cell.styles};` + `grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(row) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(row) : cell.rowsData};`"-->
+<!--          >-->
+<!--            &lt;!&ndash;           grid-template-columns: minmax(200px, ${(numCols )}fr); &ndash;&gt;-->
+<!--            <slot :name="cell.dataField" :row="row" :id="row.id != null ? cell.dataField + row.id : cell.dataField + j" :cell="cell">-->
+<!--              <template>-->
+<!--                <span v-html="cellData(row, cell)"></span>-->
+<!--              </template>-->
+<!--            </slot>-->
+<!--          </div>-->
+<!--        </div>-->
         <row-dtable
              v-for="(row, j) in dataRows"
              :key="(row.id != null ? row.id : j)"
@@ -88,6 +111,9 @@
              @row-action="rowAction($event)"
              :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"
         >
+<!--          <slot name="row" :row="row" :headers="headersForRows" :id="row.id != null ? row.id : j">-->
+
+<!--          </slot>-->
 <!--     :key="(row.id != null ? row.id : j)"      @click="rowAction($event,row)"    :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"   :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"     -->
         </row-dtable>
       </template>
@@ -102,6 +128,7 @@ import EmptyRowDtable from "@/components/emptyRowDtable";
 import RowDtable from "@/components/rowDtable";
 export default {
   name: "GridTable",
+  // eslint-disable-next-line vue/no-unused-components
   components: {RowDtable, EmptyRowDtable, LoadingDtable},
   props: {
     headers: {
@@ -123,7 +150,6 @@ export default {
     maxTableHeight: {
       type: [String, Number],
       default: '550px',
-
     },
     loadingData: {
       type: Boolean,
@@ -149,6 +175,12 @@ export default {
   computed: {
     tableWidth(){
       return this.$refs['grid-table' + this.idTable]?.clientWidth ?? 0;
+    },
+    length(){
+      return this.dataRows.length
+    },
+    slots(){
+      return this.$slots
     }
   },
   data() {
@@ -167,8 +199,9 @@ export default {
       // await this.setTopPositions();
       this.loading = false;
     },
-    tableWidth(){
-      this.setTopPositions()
+    length(a){
+      if (a !== 0)
+        setTimeout(() => {this.setTopPositions()}, 2000)
     }
   },
   mounted() {
@@ -176,7 +209,7 @@ export default {
     // window.addEventListener('resize', this.setTopPositions)
     // console.log("!!",this.$refs['grid-table' + this.idTable].clientWidth);
     // this.$refs['grid-table' + this.idTable].addEventListener('resize', this.setTopPositions);
-    this.setTopPositions();
+    // this.setTopPositions();
   },
   beforeDestroy() {
     // window.removeEventListener('resize', this.setTopPositions)
@@ -184,7 +217,7 @@ export default {
   },
   methods: {
     rowAction(e) {
-      console.log('row-action', e)
+      // console.log('row-action', e)
       this.$emit('row-action', {e: e.e, row: e.row})
     },
     cellData(row, cell) {
@@ -222,22 +255,23 @@ export default {
       }
     },
     async setTopPositions() {
-      // this.localHeaders = await Promise.all(
-          // this.localHeaders.map(async el => {
-          //   const offsetHeight = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.offsetHeight : '';
-          //   const offsetTop = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.offsetTop : '';
-          //   const clientHeight = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.clientHeight : '';
-          //   const clientWidth = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.clientWidth : '';
-          //   return {
-          //     ...el,
-          //     offsetHeight: offsetHeight,
-          //     offsetTop: offsetTop - 2,
-          //     clientHeight: clientHeight,
-          //     clientWidth: clientWidth
-          //   }
-          // })
+      console.error(11)
+      this.localHeaders = await Promise.all(
+          this.localHeaders.map(async el => {
+            const offsetHeight = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.offsetHeight : '';
+            const offsetTop = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.offsetTop : '';
+            const clientHeight = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.clientHeight : '';
+            const clientWidth = this.$refs['table-grid-header__cell-' + el.dataField] ? this.$refs['table-grid-header__cell-' + el.dataField][0]?.clientWidth : '';
+            return {
+              ...el,
+              offsetHeight: offsetHeight,
+              offsetTop: offsetTop - 2,
+              clientHeight: clientHeight,
+              clientWidth: clientWidth
+            }
+          })
 
-      // )
+      )
     },
     calcStylesForRowCell(row,cell){
       return `${typeof cell.styles === 'function' ? cell.styles(row) : cell.styles};` +`grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(row) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(row) : cell.rowsData};`
