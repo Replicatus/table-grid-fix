@@ -3,7 +3,7 @@
       class="table-grid-body-row"
       :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"
       @click="rowAction($event,row)"
-      :ref="'table-grid-body-row__'+(row.id != null ? row.id : index)"
+
   >
     <div
         v-for="cell in headersForRows"

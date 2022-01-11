@@ -86,6 +86,7 @@
              :headers-for-rows="headersForRows"
              :index="j"
              @row-action="rowAction($event)"
+             :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"
         >
 <!--     :key="(row.id != null ? row.id : j)"      @click="rowAction($event,row)"    :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"   :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"     -->
         </row-dtable>
