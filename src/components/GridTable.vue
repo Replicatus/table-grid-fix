@@ -2,52 +2,51 @@
   <div class="table-grid table-grid__container" :ref="'grid-table' + idTable"
        :style="`grid-template-columns : repeat(${numCols}, 1fr); max-height: ${maxTableHeight};`"
   >
-<!--    <div-->
-<!--        class="table-grid__container"-->
-<!--        :style="`grid-template-columns : repeat(${numCols}, 1fr); max-height: ${maxTableHeight};`"-->
-<!--    >-->
-      <!--       header -->
-<!--      <div-->
-<!--          class="table-grid-header-row"-->
-<!--          :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr )`"-->
-<!--          ref="table-grid-header-row"-->
-<!--      >-->
-<!--        <template v-if="!loading">-->
-          <slot name="defaultHeader" :headers="localHeaders">
+    <!--    <div-->
+    <!--        class="table-grid__container"-->
+    <!--        :style="`grid-template-columns : repeat(${numCols}, 1fr); max-height: ${maxTableHeight};`"-->
+    <!--    >-->
+    <!--       header -->
+    <!--      <div-->
+    <!--          class="table-grid-header-row"-->
+    <!--          :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr )`"-->
+    <!--          ref="table-grid-header-row"-->
+    <!--      >-->
+    <!--        <template v-if="!loading">-->
+    <slot name="defaultHeader" :headers="localHeaders">
 
-            <div
-                v-for="(item, i) in localHeaders"
-                :key="item.dataField + i"
-                class="table-grid-header__cell"
-                :class="item.headerClass"
-                :ref="'table-grid-header__cell-'+item.dataField"
-                :style="`grid-column: span ${item.cols };top: ${topFixedPositionForHeaderCell(item).offsetTop}px;  grid-row: span ${item.rows};
-              ${item.headerStyles}`"
-            >
-<!--  top: ${topFixedPositionForHeaderCell(item).offsetTop}px;              -->
-              <slot :name="'header-'+item.dataField" :item="item">
-                <span>{{ item.text }}</span>
-                <v-tooltip
-                    top
-                    v-if="item.headerTooltip != null && item.headerTooltip"
-                    :color="loaderColor"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                        :size="15"
-                        class="btn__icon grey-light-color__important"
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                      mdi-information
-                    </v-icon>
-                  </template>
-                  <p class="white--text" v-html="item.headerTooltipText()"></p>
-                </v-tooltip>
-                <span
-                    class="d-flex align-center justify-center"
-                    v-if="item.sortable"
-                >
+      <div
+          v-for="(item, i) in localHeaders"
+          :key="item.dataField + i"
+          class="table-grid-header__cell"
+          :class="item.headerClass"
+          :ref="'table-grid-header__cell-'+item.dataField"
+          :style="`grid-column: span ${item.cols };top: ${topFixedPositionForHeaderCell(item).offsetTop}px;  grid-row: span ${item.rows}; ${item.headerStyles}`"
+      >
+        <!--  top: ${topFixedPositionForHeaderCell(item).offsetTop}px;              -->
+        <slot :name="'header-'+item.dataField" :item="item">
+          <span>{{ item.text }}</span>
+          <v-tooltip
+              top
+              v-if="item.headerTooltip != null && item.headerTooltip"
+              :color="loaderColor"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                  :size="15"
+                  class="btn__icon grey-light-color__important"
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                mdi-information
+              </v-icon>
+            </template>
+            <p class="white--text" v-html="item.headerTooltipText()"></p>
+          </v-tooltip>
+          <span
+              class="d-flex align-center justify-center"
+              v-if="item.sortable"
+          >
                 <template v-if="sort.header === item.dataField">
                   <v-btn
                       icon
@@ -67,58 +66,81 @@
                     </v-btn>
                 </template>
           </span>
-              </slot>
-            </div>
-          </slot>
-<!--        </template>-->
-        <slot name="customHeader" :headers="headers">
-
         </slot>
-<!--      </div>-->
-      <!--        body-->
-      <loading-dtable v-if="loadingData || loading" :num-cols="numCols" :loader-color="loaderColor"></loading-dtable>
-      <empty-row-dtable :num-cols="numCols" v-else-if="dataRows.length === 0" ></empty-row-dtable>
-      <template v-else>
-<!--        <div class="table-grid-body-row"-->
-<!--             v-for="(row, j) in dataRows"-->
-<!--             :key="(row.id != null ? row.id : j)"-->
-<!--             :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"-->
-<!--             @click="rowAction($event,row)"-->
-<!--             :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"-->
-<!--        >-->
-<!--          <div-->
-<!--              class="table-grid-body-row__cell"-->
-<!--              v-for="(cell) in headersForRows"-->
-<!--              :key="cell.dataField"-->
-<!--              :class="[cell.class, painCell(row, cell)]"-->
-<!--              :style="`${typeof cell.styles === 'function' ? cell.styles(row) : cell.styles};` + `grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(row) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(row) : cell.rowsData};`"-->
-<!--          >-->
-<!--            &lt;!&ndash;           grid-template-columns: minmax(200px, ${(numCols )}fr); &ndash;&gt;-->
-<!--            <slot :name="cell.dataField" :row="row" :id="row.id != null ? cell.dataField + row.id : cell.dataField + j" :cell="cell">-->
-<!--              <template>-->
-<!--                <span v-html="cellData(row, cell)"></span>-->
-<!--              </template>-->
-<!--            </slot>-->
-<!--          </div>-->
-<!--        </div>-->
-        <row-dtable
-             v-for="(row, j) in dataRows"
-             :key="(row.id != null ? row.id : j)"
-             :row="row"
-             :num-cols="numCols"
-             :headers-for-rows="headersForRows"
-             :index="j"
-             @row-action="rowAction($event)"
-             :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"
-        >
-<!--          <slot name="row" :row="row" :headers="headersForRows" :id="row.id != null ? row.id : j">-->
+      </div>
+    </slot>
+    <!--        </template>-->
+    <slot name="customHeader" :headers="headers">
 
-<!--          </slot>-->
-<!--     :key="(row.id != null ? row.id : j)"      @click="rowAction($event,row)"    :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"   :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"     -->
-        </row-dtable>
-      </template>
-    </div>
-<!--  </div>-->
+    </slot>
+    <!--      </div>-->
+    <!--        body-->
+    <loading-dtable v-if="loadingData || loading" :num-cols="numCols" :loader-color="loaderColor"></loading-dtable>
+    <empty-row-dtable :num-cols="numCols" v-else-if="dataRows.length === 0"></empty-row-dtable>
+    <template v-else>
+        <v-virtual-scroll
+            :items="dataRows"
+            class="table-grid-body-row"
+            min-height="50"
+            bench="15"
+            :height="maxTableHeight"
+            item-height="40px"
+            :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr);`"
+        >
+<!--      @click="rowAction($event,row)"
+            :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"
+            v-for="(row, j) in dataRows"
+            :key="(row.id != null ? row.id : j)"      -->
+          <template #default="{item,index}">
+            <div class="" :style="`display: grid; grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr);`">
+              <div
+                  class="table-grid-body-row__cell"
+                  v-for="(cell) in headersForRows"
+                  :key="cell.dataField"
+                  :class="[cell.class, painCell(item, cell)]"
+                  :style="`${typeof cell.styles === 'function' ? cell.styles(item) : cell.styles};` + `grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(item) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(item) : cell.rowsData};`"
+              >
+                <!--           grid-template-columns: minmax(200px, ${(numCols )}fr); -->
+                <!--            <slot :name="cell.dataField" :row="row" :id="row.id != null ? cell.dataField + row.id : cell.dataField + j" :cell="cell">-->
+                <!--              <template>-->
+                <!--          <div>-->
+<!--                <div>-->
+
+                  <slot :name="cell.dataField" :row="item" :id="item.id != null ? cell.dataField + item.id : cell.dataField + index"
+                        :cell="cell">
+                    <template>
+                      <span v-html="cellData(item, cell)"></span>
+                    </template>
+                  </slot>
+<!--                </div>-->
+                <!--          </div>-->
+                <!--                <span v-html="cellData(row, cell)"></span>-->
+                <!--              </template>-->
+                <!--            </slot>-->
+              </div>
+
+            </div>
+          </template>
+
+      </v-virtual-scroll>
+      <!--        <row-dtable-->
+      <!--             v-for="(row, j) in dataRows"-->
+      <!--             :key="(row.id != null ? row.id : j)"-->
+      <!--             :row="row"-->
+      <!--             :num-cols="numCols"-->
+      <!--             :headers-for-rows="headersForRows"-->
+      <!--             :index="j"-->
+      <!--             @row-action="rowAction($event)"-->
+      <!--             :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"-->
+      <!--        >-->
+      <!--          <slot name="row" :row="row" :headers="headersForRows" :id="row.id != null ? row.id : j">-->
+
+      <!--          </slot>-->
+      <!--     :key="(row.id != null ? row.id : j)"      @click="rowAction($event,row)"    :ref="'table-grid-body-row__'+(row.id != null ? row.id : j)"   :style="`grid-column: span ${numCols}; grid-template-columns : repeat(${numCols}, 1fr)`"     -->
+      <!--        </row-dtable>-->
+    </template>
+  </div>
+  <!--  </div>-->
 </template>
 
 <script>
@@ -126,6 +148,7 @@
 import LoadingDtable from "@/components/loadingDtable";
 import EmptyRowDtable from "@/components/emptyRowDtable";
 import RowDtable from "@/components/rowDtable";
+
 export default {
   name: "GridTable",
   // eslint-disable-next-line vue/no-unused-components
@@ -167,19 +190,19 @@ export default {
     importsComponents: {
       type: [Array, Object]
     },
-    loaderColor:{
+    loaderColor: {
       type: String,
       default: '#00599b'
     }
   },
   computed: {
-    tableWidth(){
+    tableWidth() {
       return this.$refs['grid-table' + this.idTable]?.clientWidth ?? 0;
     },
-    length(){
+    length() {
       return this.dataRows.length
     },
-    slots(){
+    slots() {
       return this.$slots
     }
   },
@@ -199,9 +222,11 @@ export default {
       // await this.setTopPositions();
       this.loading = false;
     },
-    length(a){
+    length(a) {
       if (a !== 0)
-        setTimeout(() => {this.setTopPositions()}, 2000)
+        setTimeout(() => {
+          this.setTopPositions()
+        }, 2000)
     }
   },
   mounted() {
@@ -270,11 +295,10 @@ export default {
               clientWidth: clientWidth
             }
           })
-
       )
     },
-    calcStylesForRowCell(row,cell){
-      return `${typeof cell.styles === 'function' ? cell.styles(row) : cell.styles};` +`grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(row) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(row) : cell.rowsData};`
+    calcStylesForRowCell(row, cell) {
+      return `${typeof cell.styles === 'function' ? cell.styles(row) : cell.styles};` + `grid-column: span ${cell.colsDataCalc ? cell.colsDataCalc(row) : cell.cols}; grid-row: span ${cell.rowsDataCalc ? cell.rowsDataCalc(row) : cell.rowsData};`
     },
     topFixedPositionForHeaderCell(cell) {
       return this.localHeaders.length > 0 ? this.localHeaders.find(el => el.dataField === cell.dataField) : ''
@@ -290,16 +314,20 @@ export default {
 
 <style lang="sass">
 .table-grid
-  scrollbar-width: thin!important
-  scrollbar-color: #00599B  #CFE0EC
+  scrollbar-width: thin !important
+  scrollbar-color: #00599B #CFE0EC
+
   ::-webkit-scrollbar
     width: 4px
     height: 8px
+
   ::-webkit-scrollbar-track
     box-shadow: inset 0 0 3px #CFE0EC
+
   ::-webkit-scrollbar-thumb
     background-color: #00599B
     border-radius: 10px
+
   &__container
     display: grid
     gap: 0
@@ -312,6 +340,7 @@ export default {
     z-index: 1
     overflow-y: auto
     max-height: 550px
+
   .virtual-scroll-dtable
     //gap: 0
     //display: grid
@@ -322,9 +351,11 @@ export default {
       .vue-recycle-scroller__item-view
         gap: 0
         display: contents
+
   &-header-row
     gap: 0
     display: contents
+
   &-header__cell
     border-bottom: 2px solid #CFD8DC
     border-left: 1px solid #CFD8DC
@@ -341,17 +372,21 @@ export default {
     z-index: 2
     background-color: #FFFFFF
     text-align: center
+
     &:first-child
       border-left: 0
       text-align: left
       justify-content: flex-start
+
   &-body-row
     border-bottom: 1px solid #CFD8DC
     gap: 0
     display: contents
+
     &:hover
       cursor: pointer
-      >.table-grid-body-row__cell
+
+      > .table-grid-body-row__cell
         background-color: #F5FAFD
         color: #00599B
     //font-weight: 500
@@ -368,6 +403,7 @@ export default {
       justify-content: center
       align-items: center
       color: #455A64
+
       &:first-child
         border-left: 0
 </style>

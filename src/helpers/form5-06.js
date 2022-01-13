@@ -160,7 +160,7 @@ export default {
             text: `1`,
             order: 6,
             variable: true,
-            class: 'justify-start d-flex flex-row',
+            class: 'd-flex flex-row justify-start text-left',
         },
         {
             dataField: 'qkcpo18Mon',

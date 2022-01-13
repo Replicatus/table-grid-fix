@@ -9,10 +9,10 @@
         v-for="cell in headersForRows"
         class="table-grid-body-row__cell"
         :key="cell.dataField + index"
-        :class="[cell.class, painCell(row, cell)]"
-        :style="calcStylesForRowCell(row,cell)"
+
+
     >
-<!--                  grid-template-columns: minmax(200px, ${(numCols )}fr); -->
+<!--          :class="[cell.class, painCell(row, cell)]"     :style="calcStylesForRowCell(row,cell)"         grid-template-columns: minmax(200px, ${(numCols )}fr); -->
       <slot :name="cell.dataField" :row="row" :id="row.id != null ? row.id + index : index" :cell="cell">
         <template>
           <span v-html="cellData(row, cell)"></span>
